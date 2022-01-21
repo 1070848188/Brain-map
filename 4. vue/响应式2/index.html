@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app" style="line-height: 2;">
+        文本节点： {{ count }} <br>
+        v-html指令： <span v-html="html"></span> <br>
+        v-text指令： <span v-text="msg"></span> <br>
+        v-model: <input type="text" v-model="msg"><br>
+        data中的数据： {{ msg }} <br>
+        绑定事件及函数: <button v-on:click="decrease">-</button> {{ conuter }} <button @click="add">+</button><br>
+        数字： {{ conuter }} <br>
+        <span v-bind:style="style">v-binde</span> <br>
+        <span :style="style">:属性</span> <br>
+        <span>嵌套对象: {{ obj.a }}</span><br>
+        <span>新属性: {{ newData }}</span><br>
+        <span v-aaa="msg">错误指令</span><br>
+
+    </div>
+</body>
+<script src="./Watcher.js"></script>
+<script src="./Dep.js"></script>
+<script src="./Complit.js"></script>
+<script src="./Observer.js"></script>
+<script src="./Vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            msg: '消息',
+            count: 1,
+            html: `<strong>html文本</strong>`,
+            obj: {
+                a: 1
+            },
+            conuter: 0,
+            style: 'color: red'
+        },
+        methods: {
+            decrease() {
+                this.conuter--
+            },
+            add () {
+                this.conuter++
+            }
+        }
+    })
+
+    vm.$set(vm.$data, 'newData', 333)
+
+    setInterval(() => {
+        vm.count++
+    }, 1000);
+</script>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    /*
+      发布订阅模式：
+        $on 进行订阅
+        $emit 进行发布
+        发布后所有订阅者收到消息 进行数据改变
+    */
+
+   class VueBus {
+
+       constructor() {
+        this.obser = {}
+       }
+
+       /*
+         订阅者
+          event 事件名称
+          cb 回调函数
+       */
+       $on (event, cb) {
+        if (!this.obser[event]) { // 首先判断订阅列表是否已存在此事件
+            this.obser[event] = [cb]
+        } else {
+            this.obser[event].push(cb)
+        }
+       }
+
+       /*
+         发布者
+         event 触发的事件名称
+         ...arg 传入的参数
+       */
+       $emit (event, ...arg) {
+         this.obser[event] && this.obser[event].forEach(cb => (cb(...arg)));
+       }
+   }
+
+   const bus = new VueBus()
+   bus.$on('change', (...c) => { console.log('触发事件1：', c); })
+   bus.$on('change', (...c) => { console.log('触发事件2：', c); })
+   bus.$emit('change', 3,4,5,6)
+</script>
+</html>

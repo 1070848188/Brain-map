@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+<script>
+    /*
+      实现数据的可响应式
+    */
+    const defineReactive = (obj, key, val) => {
+        Object.defineProperty(obj, key, {
+            enumerable: true,
+            configurable: true,
+            get() {
+                return val
+            },
+            set (newVal) {
+                if (val === newVal) return
+                // obj[key] = newVal
+                app.innerHTML = newVal
+            }
+        })
+    }
+
+    /* 
+      此方法用来遍历对象中所有数据
+        让所有属性都变成响应式
+    */
+    const observer = obj => {
+        Object.keys(obj).forEach(key => {
+            defineReactive(obj, key, obj[key])
+        })
+    }
+
+    class Vue {
+        constructor (options) {
+            this.$data = options.data
+            observer(this.$data)
+        }
+    }
+
+    const vm = new Vue({
+        data: {
+            message: '初始化'
+        }
+    })
+
+    vm.$data.message = '222'
+</script>
+</html>
