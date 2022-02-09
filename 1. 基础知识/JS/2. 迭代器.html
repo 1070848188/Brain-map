@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // function *fn () {
+    //     let index = 0;
+    //     yield index;
+    //     index++;
+    //     yield index;
+    // }
+    // let a = fn()
+    // console.log(a.next());
+    // console.log(a.next());
+    // console.log(a.next());
+
+    class Box {
+        constructor (arr) {
+            this[Symbol.iterator] = function *() {
+                let i = 0,
+                len = arr.length;
+                for(;i < len;i++) {
+                    yield arr[i]
+                }
+            }
+        }
+    }
+
+    const box1 = new Box([1, 2, 3])
+    // for (const iterator of box1) {
+    //     console.log(iterator);
+    // }
+
+    // 自己写一个生成器
+    function iterators() {
+        
+    }
+
+    // 自己实现一个迭代器
+    Object.prototype.forOf = function (callback) {
+        if (!this[Symbol.iterator]) return new TypeError(`${this.name} is not iterable`)
+        let interat = this[Symbol.iterator]()
+        let flag = false
+        while(!flag) {
+            const res = interat.next()
+            flag = res.done
+            !flag && callback(res.value)
+        }
+    }
+
+    box1.forOf(val => {
+        console.log(val);
+    })
+</script>
+</html>
