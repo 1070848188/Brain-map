@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+</body>
+<script src="./1. 拦截器/index.js"></script>
+<script src="../main/Dep.js"></script>
+<script src="../main/Watcher.js"></script>
+<script src="../main/Observer.js"></script>
+<script>
+    // 测试使用
+const obj = { // 初始化数据
+    message: '我是初始化的数据',
+    data: {
+        name: '张三'
+    },
+    list: [ {
+        name: '李四'
+    }]
+}
+
+new Obserser(obj)
+
+new Watcher(obj, 'list', function (val, newVal) {
+    console.log('改变了', val, newVal);
+})
+
+</script>
+</html>
