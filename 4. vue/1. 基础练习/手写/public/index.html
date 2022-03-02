@@ -40,10 +40,10 @@
     依次类推，行成AST树形结构
      -->
     <div id="app">
-        <div>{{ message }}</div>
+        <div style="color: red;font-size: 20px;" >{{ message }} 123 {{ name }}</div>
         <div>2
             <ul>
-                <li>2-1</li>
+                <li>2-1 {{ list }}</li>
                 <li>2-2</li>
             </ul>
         </div>
@@ -53,9 +53,6 @@
             </div>
         </div>
     </div>
-    <!-- <div id="app">
-        {{ message }}
-    </div> -->
 </body>
 <script src="../dist/vue.js"></script>
 <script>
@@ -71,7 +68,8 @@
                 obj: {
                     name: '李四',
                     age: 26
-                }
+                },
+                name: 'sx'
             }
         },
         // render() {

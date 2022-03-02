@@ -47,5 +47,5 @@ export function mountComponent(vm, el) {
     //   );
 
 
-    callHook(vm, 'mounted');
+    // callHook(vm, 'mounted');
 }
