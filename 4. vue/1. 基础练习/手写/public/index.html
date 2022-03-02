@@ -9,10 +9,58 @@
 </head>
 
 <body>
+    <!-- 
+    AST树解析生成过程
+      stack: 
+        1. <div ： [({ tagName: 'div', parent: null, attrs: [], children: [] })] 同时删除<div
+        2. id="app"： 在上面的attrs里添加 { name: 'id', value: 'app'  } 同时删除id="app"
+        3. >  ： 属性循环结束 并且删掉>
+    -->
+    <!-- 
+        stack:
+         <div :
+            [
+                { type: 1, tagName: 'div', parent: null, attrs: [{ name: 'id', value: 'app'  }], children: [] },
+                { type: 1, tagName: 'div', parent: null, attrs: [], children: [] }
+            ]
+         1: 第二个数据变化
+            { tagName: 'div', parent: null, attrs: [], children: [{ type: 0, text: '1' }] }
+         </div>: 结尾标签处理： 1. 取出最后一个节点 2. 给节点赋值parent 3. 给parent赋值children
+            [
+                {
+                    tyep: 1,
+                    tagName: 'div',
+                    parent: null,
+                    attrs: [{ name: 'id', value: 'app'  }],
+                    children: [
+                        { tagName: 'div', parent: (又是自己), attrs: [], children: [{ type: 0, text: '1' }] }
+                    ]
+                }
+            ]
+    依次类推，行成AST树形结构
+     -->
+    <div id="app">
+        <div>{{ message }}</div>
+        <div>2
+            <ul>
+                <li>2-1</li>
+                <li>2-2</li>
+            </ul>
+        </div>
+        <div>3
+            <div>
+                3-1
+            </div>
+        </div>
+    </div>
+    <!-- <div id="app">
+        {{ message }}
+    </div> -->
 </body>
 <script src="../dist/vue.js"></script>
 <script>
     const vue = new Vue({
+        el: '#app',
         data() {
             return {
                 message: '信息',
@@ -25,9 +73,17 @@
                     age: 26
                 }
             }
-        }
+        },
+        // render() {
+        //     return 111
+        // },
+        // template: `<div id="app">
+        //     <p>11</p>
+        //     <p>12</p>
+        //     <p>13</p>
+        //     <p>14</p>
+        // </div>`
     })
-    console.log(vue);
 </script>
 
 </html>
