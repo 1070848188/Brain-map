@@ -32,6 +32,9 @@ methods.forEach(method => {
                 break;
         }
         if (inserted) ob.observeArray(inserted) // 对新增的数据进行响应式处理
+
+        // 数组派发更新
+        ob.dep.notify()
         return result // 将原数组的返回值返回给用户
     }
 })

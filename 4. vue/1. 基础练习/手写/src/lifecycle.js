@@ -1,4 +1,5 @@
 import { patch } from './vdom/patch'
+import Watcher from './observer/watcher';
 export function lifecycleMixin(Vue) {
     // _update：初始挂载及后续更新
     // 更新的时候，不会重新进行模板编译，因为更新只是数据发生变化，render函数没有改变。
@@ -34,17 +35,18 @@ export function mountComponent(vm, el) {
         vm._update(vm._render())
     }
 
-    updateComponent();
+    // updateComponent();
 
     //   创建一个Watcher，后续在响应式时再实现
-    //   new Watcher(
-    //     vm,
-    //     updateComponent,
-    //     () => {
-    //       callHook(vm, "beforeUpdate");
-    //     },
-    //     true
-    //   );
+    // 每个组件渲染的时候 都会创建一个watcher 并执行updateComponent true表示是渲染watcher
+      new Watcher(
+        vm,
+        updateComponent,
+        () => {
+          callHook(vm, "beforeUpdate");
+        },
+        true
+      );
 
 
     // callHook(vm, 'mounted');
