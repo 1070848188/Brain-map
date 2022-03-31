@@ -63,3 +63,32 @@ console.log(([]).__proto__ === Array.prototype);
  *              => 直到Object类  => 最后到null
  *  
  */
+
+// 继承
+function Parent() {
+    this.name = 'parent';
+    this.say = function () {
+        console.log('this is parent');
+    }
+}
+
+Parent.prototype.age = 12;
+
+// 原型继承
+// function Child() {
+
+// }
+
+// Child.prototype = new Parent() // 子类原型为父类实例化对象
+// 缺点：私有属性与公有属性不分离
+
+// call继承
+function Child() {
+    Parent.call(this)
+}
+// 缺点：无法继承公有属性
+
+// 寄生组合式  call+原型
+Child.prototype = Parent.prototype; // 继承公有属性
+Child.prototype.constructor = Child;
+let child1 = new Child()
