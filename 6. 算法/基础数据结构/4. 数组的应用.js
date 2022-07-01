@@ -39,8 +39,8 @@ const twoSumEs6 = function (nums, target) {
     }
 }
 
-console.log(twoSumEs5([1,2,3,4,5,,6,7], 7));
-console.log(twoSumEs6([1,2,3,4,5,,6,7], 5));
+// console.log(twoSumEs5([1,2,3,4,5,,6,7], 7));
+// console.log(twoSumEs6([1,2,3,4,5,,6,7], 5));
 
 /** 
  * @description 双指针法
@@ -90,7 +90,7 @@ console.log(twoSumEs6([1,2,3,4,5,,6,7], 5));
  }
 
  
- console.log(merge([6,7,8,0,0,0,0], 3, [2,3,3,5], 4));
+//  console.log(merge([6,7,8,0,0,0,0], 3, [2,3,3,5], 4));
 
 
  /** 
@@ -107,29 +107,33 @@ function findThree(nums) {
     let arr = []
     nums.sort((a, b) => a - b) // 首先进行排序
     for (let i = 0, len = nums.length; i < len - 2; i++) {
-        let l = i + 1, k = len - 1;
-        while (l < k) {
-            if (nums[i] + nums[l] + nums[k] > 0) { // 大于0代表右侧数较大
-                k--; // 右指针左移
-                // 处理两次数一样的情况
-                while (l < k && nums[k] === nums [k + 1]) {
-                    k--;
+        // 双指针指定左右数字
+        let l = i + 1, r = len - 1, target = nums[i];
+        if(i > 0 && nums[i] === nums[i-1]) { // 本次遍历数与上次相同，则跳过
+            continue;
+        }
+        while(l < r) {
+            if (target + nums[l] + nums[r] > 0) { // 三个数之和大于0
+                r--; // 代表右侧数大了  所有右指针左移
+                while(l<r && nums[r] === nums[r+1]) { // 右指针两次数相等
+                    r--;
                 }
-            } else if (nums[i] + nums[l] + nums[k] < 0) { // 小于0代表左侧数较小
-                l++ // 左指针右移
-                // 处理两次数一样的情况
-                while (l < k && nums[l] === nums [l - 1]) {
-                    l--;
+            } else if (target + nums[l] + nums[r] < 0) {
+                l++;
+                while(l<r && nums[l] === nums[l - 1]) { // 右指针两次数相等
+                    l++;
                 }
-            } else { // 三数相加等于0 可以推进数组中，但仍需继续前进指针，看是否还有
-                arr.push(nums[i], nums[l], nums[k])
-                l--;
-                k--;
-                while (l < k && nums[k] === nums [k + 1]) {
-                    k--;
+            } else {
+                // 条件成立后push进数组
+                arr.push([nums[i], nums[l], nums[r]]);
+                // 左右指针一起前进
+                l++;
+                r--;
+                while(l<r && nums[r] === nums[r+1]) { // 右指针两次数相等
+                    r--;
                 }
-                while (l < k && nums[l] === nums [l - 1]) {
-                    l--;
+                while(l<r && nums[l] === nums[l - 1]) { // 右指针两次数相等
+                    l++;
                 }
             }
         }
