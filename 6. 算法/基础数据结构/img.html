@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label>上传图片： <input type="file" name="file" id="imgFile"></label>
+    <div id="imgList"></div>
+</body>
+<script>
+
+    // 上传完图片后转为base64 添加到页面中
+    imgFile.addEventListener('change', e => addImgData(imgFile.files[0]))
+
+    /**
+     * @descriptions 根据文件对象生成file并添加到页面上
+     * */
+    const addImgData = file => {
+        if (!file) return
+        let render = new FileReader()
+        render.readAsDataURL(file) // 生成base64
+        render.onload = e => { // 监听时间
+            const img = document.createElement('img')
+            img.src = e.target.result
+            imgList.appendChild(img)
+        }
+    }
+
+    console.log(a)
+    var a = 3
+    function a() {
+
+    }
+</script>
+</html>
