@@ -1,4 +1,6 @@
 import arrayMethods from './array'
+import Dep from './dep'
+import Watcher from './watcher';
 
 export function observe(data) {
     // 如果是object类型（对象或数组）才观测；
@@ -25,6 +27,9 @@ export function observe(data) {
  */
 class Observer {
     constructor(data) {
+        this.value = data;
+        this.dep = new Dep(); // 给data添加一个dep 收集data整体的一个dep(主要用于数组的依赖收集)
+
         // 在数据data上新增属性 data.__ob__；指向经过new Observer(data)创建的实例
         // 可以访问Observer.prototype上的方法observeArray、walk等
         // 所有被劫持过的数据都有__ob__属性（通过这个属性可以判断数据是否被检测过）
@@ -71,18 +76,44 @@ class Observer {
 }
 
 function defineReactive(data, key, value) {
-    observe(value) // 【关键】递归，劫持对象中所有层级的所有属性
+    let childOb = observe(value) // 【关键】递归，劫持对象中所有层级的所有属性
     // 如果Vue数据嵌套层级过深 >> 性能会受影响【******************************】
-
+    let dep = new Dep() // 为每一个属性创建一个独一无二的dep
     Object.defineProperty(data, key, {
         get() {
             // 依赖收集
+            if (Dep.target) {
+                dep.depend()
+                // 如果属性的值依然是一个数组/对象，则对该 数组/对象 整体进行依赖收集
+                if (childOb) {
+                    childOb.dep.depend();
+                    // 如果数据结构类似 {a:[1,2,[3,4,[5,6]]]} 这种数组多层嵌套
+                    // 数组包含数组的情况，那么我们访问a的时候，只是对第一层的数组进行了依赖收集
+                    // 里面的数组因为没访问到，所以无法收集依赖，但是如果我们改变了a里面的第二层数组的值
+                    // 是需要更新页面的，所以需要对数组递归进行依赖收集
+                    if (Array.isArray(value)) {
+                        dependArray(value)
+                    }
+                }
+            }
             return value
         },
         set(newValue) {
             if (value === newValue) return
             value = newValue
             // 通知所有依赖更新数据
+            dep.notify() // 通知dep存放的wathcers去更新 -- 派发更新
         }
     })
+}
+
+function dependArray(value) {
+    for (let e, i = 0, l = value.length; i < l; i++) {
+        e = value[i];
+        // 对每一项进行依赖收集
+        e && e.__ob__ && e.__ob__.dep.depend();
+        if (Array.isArray(e)) {
+            dependArray(e)
+        }
+    }
 }
